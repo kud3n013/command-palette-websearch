@@ -1,0 +1,48 @@
+name: CI
+
+# Tests and builds the (unsigned) MSIX packages. Publishes nothing: a release needs a signed MSIX, and
+# who signs it (Microsoft Store or a code-signing certificate) is still open. See RELEASING.md.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  DOTNET_SDK_VERSION: '10.0.401'
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ env.DOTNET_SDK_VERSION }}
+
+      - name: Check versions and CLSID agree
+        shell: pwsh
+        run: |
+          $global:LASTEXITCODE = 0
+          ./scripts/check-version.ps1
+          if ($LASTEXITCODE -ne 0) { throw "Version check failed" }
+
+      - name: Test
+        run: dotnet test CmdPalWebSearchShortcut/WebSearchShortcut.Tests/WebSearchShortcut.Tests.csproj -c Release -p:Platform=x64
+
+      - name: Build MSIX packages (x64 and arm64, unsigned)
+        shell: pwsh
+        run: ./scripts/build-msix.ps1 -Platform all
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: msix-unsigned
+          path: |
+            artifacts/WebSearchShortcut-*.msix
+            artifacts/SHA256SUMS.txt
+          if-no-files-found: error
