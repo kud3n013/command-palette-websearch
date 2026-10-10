@@ -1,158 +1,40 @@
-using System.Linq;
-using System.Text.Json;
-using System.Text.Json.Nodes;
 using Microsoft.CommandPalette.Extensions.Toolkit;
-using Windows.Foundation;
-using WebSearchShortcut.Browser;
 using WebSearchShortcut.Properties;
+using WebSearchShortcut.Services;
 
 namespace WebSearchShortcut;
 
+/// <summary>
+/// Add/Edit form opened from the palette. Saves through <see cref="ShortcutService"/>, which owns the shortcuts list.
+/// </summary>
 internal sealed partial class AddShortcutForm : FormContent
 {
     private readonly WebSearchShortcutDataEntry? _shortcut;
+    private readonly ShortcutService _service;
 
-    public AddShortcutForm(WebSearchShortcutDataEntry? shortcut)
+    public AddShortcutForm(WebSearchShortcutDataEntry? shortcut, ShortcutService service)
     {
         _shortcut = shortcut;
-        var name = shortcut?.Name ?? string.Empty;
-        var url = shortcut?.Url ?? string.Empty;
-        var suggestionProvider = shortcut?.SuggestionProvider ?? string.Empty;
-        var replaceWhitespace = shortcut?.ReplaceWhitespace ?? string.Empty;
-        var homePage = shortcut?.HomePage ?? string.Empty;
-        var browserPath = shortcut?.BrowserPath ?? string.Empty;
-        var browserArgs = shortcut?.BrowserArgs ?? string.Empty;
+        _service = service;
 
-        TemplateJson = $$"""
-{
-    "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
-    "type": "AdaptiveCard",
-    "version": "1.6",
-    "body": [
-        {
-            "id": "name",
-            "type": "Input.Text",
-            "label": {{JsonSerializer.Serialize(Resources.AddShortcutForm_Name_Label, AppJsonSerializerContext.Default.String)}},
-            "value": {{JsonSerializer.Serialize(name, AppJsonSerializerContext.Default.String)}},
-            "isRequired": true,
-            "errorMessage": {{JsonSerializer.Serialize(Resources.AddShortcutForm_Name_ErrorMessage, AppJsonSerializerContext.Default.String)}}
-        },
-        {
-            "id": "url",
-            "type": "Input.Text",
-            "style": "Url",
-            "label": {{JsonSerializer.Serialize(Resources.AddShortcutForm_Url_Label, AppJsonSerializerContext.Default.String)}},
-            "placeholder": {{JsonSerializer.Serialize(Resources.AddShortcutForm_Url_Placeholder, AppJsonSerializerContext.Default.String)}},
-            "value": {{JsonSerializer.Serialize(url, AppJsonSerializerContext.Default.String)}},
-            "isRequired": true,
-            "errorMessage": {{JsonSerializer.Serialize(Resources.AddShortcutForm_Url_ErrorMessage, AppJsonSerializerContext.Default.String)}}
-        },
-        {
-            "id": "suggestionProvider",
-            "type": "Input.ChoiceSet",
-            "label": {{JsonSerializer.Serialize(Resources.AddShortcutForm_SuggestionProvider_Label, AppJsonSerializerContext.Default.String)}},
-            "placeholder": {{JsonSerializer.Serialize(Resources.AddShortcutForm_SuggestionProvider_Placeholder, AppJsonSerializerContext.Default.String)}},
-            "choices": [
-                {
-                    "title": {{JsonSerializer.Serialize(Resources.AddShortcutForm_SuggestionProvider_None, AppJsonSerializerContext.Default.String)}},
-                    "value": ""
-                },
-{{SuggestionsRegistry.ProviderNames.Select(key => $$"""
-                {
-                    "title": {{JsonSerializer.Serialize(key, AppJsonSerializerContext.Default.String)}},
-                    "value": {{JsonSerializer.Serialize(key, AppJsonSerializerContext.Default.String)}}
-                }
-""")
-    .Aggregate((a, b) => a + ",\n" + b)}}
-            ],
-            "value": {{JsonSerializer.Serialize(suggestionProvider, AppJsonSerializerContext.Default.String)}},
-            "errorMessage": "// Just for space between items"
-        },
-        {
-            "id": "homePage",
-            "type": "Input.Text",
-            "style": "Url",
-            "label": {{JsonSerializer.Serialize(Resources.AddShortcutForm_Homepage_Label, AppJsonSerializerContext.Default.String)}},
-            "placeholder": {{JsonSerializer.Serialize(Resources.AddShortcutForm_Homepage_Placeholder, AppJsonSerializerContext.Default.String)}},
-            "value": {{JsonSerializer.Serialize(homePage, AppJsonSerializerContext.Default.String)}},
-            "errorMessage": "// Just for space between items"
-        },
-        {
-            "id": "replaceWhitespace",
-            "type": "Input.Text",
-            "label": {{JsonSerializer.Serialize(Resources.AddShortcutForm_ReplaceWhitespace_Label, AppJsonSerializerContext.Default.String)}},
-            "placeholder": {{JsonSerializer.Serialize(Resources.AddShortcutForm_ReplaceWhitespace_Placeholder, AppJsonSerializerContext.Default.String)}},
-            "value": {{JsonSerializer.Serialize(replaceWhitespace, AppJsonSerializerContext.Default.String)}},
-            "errorMessage": "// Just for space between items"
-        },
-        {
-            "id": "browserPath",
-            "type": "Input.ChoiceSet",
-            "label": {{JsonSerializer.Serialize(Resources.AddShortcutForm_BrowserPath_Label, AppJsonSerializerContext.Default.String)}},
-            "placeholder": {{JsonSerializer.Serialize(browserPath, AppJsonSerializerContext.Default.String)}},
-            "choices": [
-                {
-                    "title": {{JsonSerializer.Serialize(Resources.AddShortcutForm_BrowserPath_Default, AppJsonSerializerContext.Default.String)}},
-                    "value": ""
-                },
-{{BrowsersDiscovery.GetInstalledBrowsers()
-    .Where(b => !string.IsNullOrWhiteSpace(b.Path))
-    .Select(b => $$"""
-                {
-                    "title": {{JsonSerializer.Serialize(b.Name, AppJsonSerializerContext.Default.String)}},
-                    "value": {{JsonSerializer.Serialize(b.Path, AppJsonSerializerContext.Default.String)}}
-                }
-""")
-    .Aggregate((a, b) => a + ",\n" + b)}}
-            ],
-            "value": {{JsonSerializer.Serialize(browserPath, AppJsonSerializerContext.Default.String)}},
-            "errorMessage": "// Just for space between items"
-        },
-        {
-            "id": "browserArgs",
-            "type": "Input.Text",
-            "label": {{JsonSerializer.Serialize(Resources.AddShortcutForm_BrowserArgs_Label, AppJsonSerializerContext.Default.String)}},
-            "placeholder": {{JsonSerializer.Serialize(Resources.AddShortcutForm_BrowserArgs_Placeholder, AppJsonSerializerContext.Default.String)}},
-            "value": {{JsonSerializer.Serialize(browserArgs, AppJsonSerializerContext.Default.String)}},
-            "errorMessage": "// Just for space between items"
-        }
-    ],
-    "actions": [
-        {
-            "type": "Action.Submit",
-            "title": {{JsonSerializer.Serialize(Resources.AddShortcutForm_Save, AppJsonSerializerContext.Default.String)}},
-            "data": {
-                "name": "name",
-                "url": "url",
-                "suggestionProvider": "suggestionProvider",
-                "replaceWhitespace": "replaceWhitespace",
-                "homePage": "homePage",
-                "browserPath": "browserPath",
-                "browserArgs": "browserArgs"
-            }
-        }
-    ]
-}
-""";
+        TemplateJson = CardTemplates.Card(
+            ShortcutFormTemplate.Inputs(shortcut),
+            [CardTemplates.Submit(Resources.AddShortcutForm_Save, ShortcutFormTemplate.SaveAction)]);
     }
 
-    internal event TypedEventHandler<object, WebSearchShortcutDataEntry>? AddedCommand;
-
-    public override CommandResult SubmitForm(string inputs)
+    public override CommandResult SubmitForm(string inputs, string data)
     {
-        var root = JsonNode.Parse(inputs);
-        if (root is null) return CommandResult.GoHome();
+        var values = ShortcutFormTemplate.ReadValues(inputs, _shortcut?.Id ?? string.Empty);
 
-        var shortcut = _shortcut ?? new WebSearchShortcutDataEntry();
-        shortcut.Name = root["name"]?.GetValue<string>() ?? string.Empty;
-        shortcut.Url = root["url"]?.GetValue<string>() ?? string.Empty;
-        shortcut.SuggestionProvider = root["suggestionProvider"]?.GetValue<string>() ?? string.Empty;
-        shortcut.ReplaceWhitespace = root["replaceWhitespace"]?.GetValue<string>() ?? string.Empty;
-        shortcut.HomePage = root["homePage"]?.GetValue<string>() ?? string.Empty;
-        shortcut.BrowserPath = root["browserPath"]?.GetValue<string>() ?? string.Empty;
-        shortcut.BrowserArgs = root["browserArgs"]?.GetValue<string>() ?? string.Empty;
+        if (ShortcutFormTemplate.Validate(values) is { } error)
+            return CommandResult.ShowToast(error);
 
-        AddedCommand?.Invoke(this, shortcut);
-        return CommandResult.GoHome();
+        bool saved = _shortcut is null
+            ? _service.Add(values)
+            : _service.Update(_shortcut.Id, values);
+
+        return saved
+            ? CommandResult.GoHome()
+            : CommandResult.ShowToast(Resources.StorageLoadError_AddBlocked);
     }
 }

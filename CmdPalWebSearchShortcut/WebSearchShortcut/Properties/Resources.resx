@@ -222,4 +222,175 @@
   <data name="SettingsItem_Title" xml:space="preserve">
     <value>Settings</value>
   </data>
+  <data name="AddShortcutForm_Keyword_Label" xml:space="preserve">
+    <value>Alias (Optional)</value>
+  </data>
+  <data name="AddShortcutForm_Keyword_Placeholder" xml:space="preserve">
+    <value>e.g. g, then type "g cats" in Command Palette to search with it</value>
+  </data>
+  <data name="AddShortcutForm_Keyword_ErrorMessage" xml:space="preserve">
+    <value>The alias can't contain spaces</value>
+  </data>
+  <data name="DeleteShortcut_ConfirmTitleTemplate" xml:space="preserve">
+    <value>Delete {shortcut}?</value>
+  </data>
+  <data name="DeleteShortcut_ConfirmDescription" xml:space="preserve">
+    <value>This search shortcut will be removed.</value>
+  </data>
+  <data name="DeleteShortcut_ConfirmButton" xml:space="preserve">
+    <value>Delete</value>
+  </data>
+  <data name="OpenUrlFailed_ToastTemplate" xml:space="preserve">
+    <value>Couldn't open {url}</value>
+  </data>
+  <data name="NoHomepage_ToastTemplate" xml:space="preserve">
+    <value>{shortcut} has no valid URL to open. Set a homepage or fix the URL.</value>
+  </data>
+  <data name="StorageLoadError_Title" xml:space="preserve">
+    <value>Couldn't load search shortcuts</value>
+  </data>
+  <data name="StorageLoadError_OpenFile" xml:space="preserve">
+    <value>Open shortcuts file</value>
+  </data>
+  <data name="StorageLoadError_Reload" xml:space="preserve">
+    <value>Reload shortcuts</value>
+  </data>
+  <data name="StorageLoadError_Reset" xml:space="preserve">
+    <value>Reset to default shortcuts</value>
+  </data>
+  <data name="StorageLoadError_ResetConfirmTitle" xml:space="preserve">
+    <value>Reset search shortcuts?</value>
+  </data>
+  <data name="StorageLoadError_ResetConfirmDescription" xml:space="preserve">
+    <value>The current file will be copied to a .bak file next to it, then replaced with the default shortcuts.</value>
+  </data>
+  <data name="StorageLoadError_AddBlocked" xml:space="preserve">
+    <value>Search shortcuts couldn't be loaded. Fix or reset the shortcuts file first.</value>
+  </data>
+  <data name="StorageReset_ToastTemplate" xml:space="preserve">
+    <value>Shortcuts reset. Backup saved to {backup}</value>
+  </data>
+  <data name="Settings_PageTitle" xml:space="preserve">
+    <value>Search shortcuts</value>
+  </data>
+  <data name="Settings_AddDescription" xml:space="preserve">
+    <value>Add a website you can search from the Command Palette.</value>
+  </data>
+  <data name="Settings_AddButton" xml:space="preserve">
+    <value>Add</value>
+  </data>
+  <data name="Settings_AddedTemplate" xml:space="preserve">
+    <value>Added {shortcut}.</value>
+  </data>
+  <data name="Settings_Cancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="Settings_SavedTemplate" xml:space="preserve">
+    <value>Saved {shortcut}.</value>
+  </data>
+  <data name="Settings_ShortcutMissing" xml:space="preserve">
+    <value>This search shortcut no longer exists.</value>
+  </data>
+  <data name="Settings_ListHeaderTemplate" xml:space="preserve">
+    <value>Your search shortcuts ({count})</value>
+  </data>
+  <data name="Settings_ListEmpty" xml:space="preserve">
+    <value>No search shortcuts yet. Add one above or import a list below.</value>
+  </data>
+  <data name="Settings_KeywordTemplate" xml:space="preserve">
+    <value>Alias: {keyword}</value>
+  </data>
+  <data name="Settings_SuggestionsTemplate" xml:space="preserve">
+    <value>Suggestions: {provider}</value>
+  </data>
+  <data name="Settings_ResetConfirmButton" xml:space="preserve">
+    <value>Reset</value>
+  </data>
+  <data name="Import_Header" xml:space="preserve">
+    <value>Import and export</value>
+  </data>
+  <data name="Import_Description" xml:space="preserve">
+    <value>Paste JSON, or the full path to a .json file. Accepted: an export from this page, a WebSearchShortcut.json file, or a PowerToys Run WebSearchShortcut config.</value>
+  </data>
+  <data name="Import_Placeholder" xml:space="preserve">
+    <value>Paste JSON or a file path</value>
+  </data>
+  <data name="Import_ReplaceToggle" xml:space="preserve">
+    <value>Replace shortcuts that have the same name</value>
+  </data>
+  <data name="Import_Button" xml:space="preserve">
+    <value>Import</value>
+  </data>
+  <data name="Import_ResultTemplate" xml:space="preserve">
+    <value>Import finished: {added} added, {updated} replaced, {skipped} skipped (name already exists), {invalid} invalid.</value>
+  </data>
+  <data name="Import_NothingFoundTemplate" xml:space="preserve">
+    <value>No search shortcuts found ({invalid} invalid). Each one needs a name and a URL, and an alias without spaces.</value>
+  </data>
+  <data name="Import_InvalidJsonTemplate" xml:space="preserve">
+    <value>That isn't valid JSON: {error}</value>
+  </data>
+  <data name="Import_FileErrorTemplate" xml:space="preserve">
+    <value>Couldn't read {path}: {error}</value>
+  </data>
+  <data name="Import_EmptyInput" xml:space="preserve">
+    <value>Paste JSON or a file path first.</value>
+  </data>
+  <data name="Export_Button" xml:space="preserve">
+    <value>Copy all as JSON</value>
+  </data>
+  <data name="Export_ResultTemplate" xml:space="preserve">
+    <value>Copied {count} search shortcuts to the clipboard as JSON.</value>
+  </data>
+  <data name="AddShortcutForm_UseAsFallback_Label" xml:space="preserve">
+    <value>Include in global results</value>
+  </data>
+  <data name="AddShortcutForm_UseAsFallback_Title" xml:space="preserve">
+    <value>Offer this search for anything typed in Command Palette, not only after its alias</value>
+  </data>
+  <data name="Settings_SearchPlaceholder" xml:space="preserve">
+    <value>Search by name, alias or URL</value>
+  </data>
+  <data name="Settings_SearchButton" xml:space="preserve">
+    <value>Search</value>
+  </data>
+  <data name="Settings_ClearSearch" xml:space="preserve">
+    <value>Show all</value>
+  </data>
+  <data name="Settings_MatchesTemplate" xml:space="preserve">
+    <value>{matches} of {count} match "{query}"</value>
+  </data>
+  <data name="Settings_NoMatchesTemplate" xml:space="preserve">
+    <value>Nothing matches "{query}".</value>
+  </data>
+  <data name="Settings_DisabledNote" xml:space="preserve">
+    <value>Off: hidden from Command Palette</value>
+  </data>
+  <data name="Settings_SwitchOnTemplate" xml:space="preserve">
+    <value>{shortcut} is on. Select to turn it off.</value>
+  </data>
+  <data name="Settings_SwitchOffTemplate" xml:space="preserve">
+    <value>{shortcut} is off. Select to turn it on.</value>
+  </data>
+  <data name="Import_Summary" xml:space="preserve">
+    <value>Add many search shortcuts from JSON, or copy them all</value>
+  </data>
+  <data name="AddShortcutForm_Name_Description" xml:space="preserve">
+    <value>Shown in Command Palette and in this list</value>
+  </data>
+  <data name="AddShortcutForm_Keyword_ShortPlaceholder" xml:space="preserve">
+    <value>Enter alias</value>
+  </data>
+  <data name="AddShortcutForm_SuggestionProvider_Description" xml:space="preserve">
+    <value>Where search suggestions come from while you type</value>
+  </data>
+  <data name="AddShortcutForm_Homepage_Description" xml:space="preserve">
+    <value>Opened by "Open homepage" and when the search is empty. Uses the domain by default.</value>
+  </data>
+  <data name="AddShortcutForm_ReplaceWhitespace_Description" xml:space="preserve">
+    <value>Put between words instead of "+", e.g. %20</value>
+  </data>
+  <data name="AddShortcutForm_BrowserPath_Description" xml:space="preserve">
+    <value>Browser that opens the results</value>
+  </data>
 </root>

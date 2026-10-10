@@ -223,4 +223,175 @@
   <data name="SettingsItem_Title" type="System.Resources.ResXNullRef, System.Windows.Forms">
     <value />
   </data>
+  <data name="AddShortcutForm_Keyword_Label" xml:space="preserve">
+    <value>Alias (facultatif)</value>
+  </data>
+  <data name="AddShortcutForm_Keyword_Placeholder" xml:space="preserve">
+    <value>ex. g, puis tapez « g chats » dans Command Palette pour rechercher avec</value>
+  </data>
+  <data name="AddShortcutForm_Keyword_ErrorMessage" xml:space="preserve">
+    <value>L'alias ne peut pas contenir d'espaces</value>
+  </data>
+  <data name="DeleteShortcut_ConfirmTitleTemplate" xml:space="preserve">
+    <value>Supprimer {shortcut} ?</value>
+  </data>
+  <data name="DeleteShortcut_ConfirmDescription" xml:space="preserve">
+    <value>Ce raccourci de recherche sera supprimé.</value>
+  </data>
+  <data name="DeleteShortcut_ConfirmButton" xml:space="preserve">
+    <value>Supprimer</value>
+  </data>
+  <data name="OpenUrlFailed_ToastTemplate" xml:space="preserve">
+    <value>Impossible d'ouvrir {url}</value>
+  </data>
+  <data name="NoHomepage_ToastTemplate" xml:space="preserve">
+    <value>{shortcut} n'a pas d'URL valide à ouvrir. Définissez une page d'accueil ou corrigez l'URL.</value>
+  </data>
+  <data name="StorageLoadError_Title" xml:space="preserve">
+    <value>Impossible de charger les raccourcis de recherche</value>
+  </data>
+  <data name="StorageLoadError_OpenFile" xml:space="preserve">
+    <value>Ouvrir le fichier des raccourcis</value>
+  </data>
+  <data name="StorageLoadError_Reload" xml:space="preserve">
+    <value>Recharger les raccourcis</value>
+  </data>
+  <data name="StorageLoadError_Reset" xml:space="preserve">
+    <value>Rétablir les raccourcis par défaut</value>
+  </data>
+  <data name="StorageLoadError_ResetConfirmTitle" xml:space="preserve">
+    <value>Réinitialiser les raccourcis de recherche ?</value>
+  </data>
+  <data name="StorageLoadError_ResetConfirmDescription" xml:space="preserve">
+    <value>Le fichier actuel sera copié dans un fichier .bak à côté, puis remplacé par les raccourcis par défaut.</value>
+  </data>
+  <data name="StorageLoadError_AddBlocked" xml:space="preserve">
+    <value>Les raccourcis de recherche n'ont pas pu être chargés. Corrigez ou réinitialisez d'abord le fichier des raccourcis.</value>
+  </data>
+  <data name="StorageReset_ToastTemplate" xml:space="preserve">
+    <value>Raccourcis réinitialisés. Sauvegarde enregistrée dans {backup}</value>
+  </data>
+  <data name="Settings_PageTitle" xml:space="preserve">
+    <value>Raccourcis de recherche</value>
+  </data>
+  <data name="Settings_AddDescription" xml:space="preserve">
+    <value>Ajoutez un site web dans lequel rechercher depuis la palette de commandes.</value>
+  </data>
+  <data name="Settings_AddButton" xml:space="preserve">
+    <value>Ajouter</value>
+  </data>
+  <data name="Settings_AddedTemplate" xml:space="preserve">
+    <value>{shortcut} ajouté.</value>
+  </data>
+  <data name="Settings_Cancel" xml:space="preserve">
+    <value>Annuler</value>
+  </data>
+  <data name="Settings_SavedTemplate" xml:space="preserve">
+    <value>{shortcut} enregistré.</value>
+  </data>
+  <data name="Settings_ShortcutMissing" xml:space="preserve">
+    <value>Ce raccourci de recherche n'existe plus.</value>
+  </data>
+  <data name="Settings_ListHeaderTemplate" xml:space="preserve">
+    <value>Vos raccourcis de recherche ({count})</value>
+  </data>
+  <data name="Settings_ListEmpty" xml:space="preserve">
+    <value>Aucun raccourci de recherche pour l'instant. Ajoutez-en un ci-dessus ou importez une liste ci-dessous.</value>
+  </data>
+  <data name="Settings_KeywordTemplate" xml:space="preserve">
+    <value>Alias : {keyword}</value>
+  </data>
+  <data name="Settings_SuggestionsTemplate" xml:space="preserve">
+    <value>Suggestions : {provider}</value>
+  </data>
+  <data name="Settings_ResetConfirmButton" xml:space="preserve">
+    <value>Réinitialiser</value>
+  </data>
+  <data name="Import_Header" xml:space="preserve">
+    <value>Importer et exporter</value>
+  </data>
+  <data name="Import_Description" xml:space="preserve">
+    <value>Collez du JSON ou le chemin complet d'un fichier .json. Formats acceptés : un export de cette page, un fichier WebSearchShortcut.json ou une configuration WebSearchShortcut de PowerToys Run.</value>
+  </data>
+  <data name="Import_Placeholder" xml:space="preserve">
+    <value>Collez du JSON ou un chemin de fichier</value>
+  </data>
+  <data name="Import_ReplaceToggle" xml:space="preserve">
+    <value>Remplacer les raccourcis portant le même nom</value>
+  </data>
+  <data name="Import_Button" xml:space="preserve">
+    <value>Importer</value>
+  </data>
+  <data name="Import_ResultTemplate" xml:space="preserve">
+    <value>Importation terminée : {added} ajouté(s), {updated} remplacé(s), {skipped} ignoré(s) (nom déjà utilisé), {invalid} invalide(s).</value>
+  </data>
+  <data name="Import_NothingFoundTemplate" xml:space="preserve">
+    <value>Aucun raccourci de recherche trouvé ({invalid} invalide(s)). Chacun doit avoir un nom, une URL et un alias sans espaces.</value>
+  </data>
+  <data name="Import_InvalidJsonTemplate" xml:space="preserve">
+    <value>Ce n'est pas du JSON valide : {error}</value>
+  </data>
+  <data name="Import_FileErrorTemplate" xml:space="preserve">
+    <value>Impossible de lire {path} : {error}</value>
+  </data>
+  <data name="Import_EmptyInput" xml:space="preserve">
+    <value>Collez d'abord du JSON ou un chemin de fichier.</value>
+  </data>
+  <data name="Export_Button" xml:space="preserve">
+    <value>Tout copier en JSON</value>
+  </data>
+  <data name="Export_ResultTemplate" xml:space="preserve">
+    <value>{count} raccourci(s) de recherche copié(s) dans le presse-papiers en JSON.</value>
+  </data>
+  <data name="AddShortcutForm_UseAsFallback_Label" xml:space="preserve">
+    <value>Inclure dans les résultats globaux</value>
+  </data>
+  <data name="AddShortcutForm_UseAsFallback_Title" xml:space="preserve">
+    <value>Proposer cette recherche pour tout ce qui est tapé dans Command Palette, pas seulement après son alias</value>
+  </data>
+  <data name="Settings_SearchPlaceholder" xml:space="preserve">
+    <value>Rechercher par nom, alias ou URL</value>
+  </data>
+  <data name="Settings_SearchButton" xml:space="preserve">
+    <value>Rechercher</value>
+  </data>
+  <data name="Settings_ClearSearch" xml:space="preserve">
+    <value>Tout afficher</value>
+  </data>
+  <data name="Settings_MatchesTemplate" xml:space="preserve">
+    <value>{matches} sur {count} correspondent à « {query} »</value>
+  </data>
+  <data name="Settings_NoMatchesTemplate" xml:space="preserve">
+    <value>Aucun résultat pour « {query} ».</value>
+  </data>
+  <data name="Settings_DisabledNote" xml:space="preserve">
+    <value>Désactivé : masqué dans Command Palette</value>
+  </data>
+  <data name="Settings_SwitchOnTemplate" xml:space="preserve">
+    <value>{shortcut} est activé. Sélectionnez pour le désactiver.</value>
+  </data>
+  <data name="Settings_SwitchOffTemplate" xml:space="preserve">
+    <value>{shortcut} est désactivé. Sélectionnez pour l'activer.</value>
+  </data>
+  <data name="Import_Summary" xml:space="preserve">
+    <value>Ajouter plusieurs raccourcis depuis du JSON, ou tous les copier</value>
+  </data>
+  <data name="AddShortcutForm_Name_Description" xml:space="preserve">
+    <value>Affiché dans Command Palette et dans cette liste</value>
+  </data>
+  <data name="AddShortcutForm_Keyword_ShortPlaceholder" xml:space="preserve">
+    <value>Saisir un alias</value>
+  </data>
+  <data name="AddShortcutForm_SuggestionProvider_Description" xml:space="preserve">
+    <value>Source des suggestions de recherche pendant la saisie</value>
+  </data>
+  <data name="AddShortcutForm_Homepage_Description" xml:space="preserve">
+    <value>Ouverte par « Ouvrir » et quand la recherche est vide. Le domaine par défaut.</value>
+  </data>
+  <data name="AddShortcutForm_ReplaceWhitespace_Description" xml:space="preserve">
+    <value>Placé entre les mots au lieu de « + », ex. %20</value>
+  </data>
+  <data name="AddShortcutForm_BrowserPath_Description" xml:space="preserve">
+    <value>Navigateur qui ouvre les résultats</value>
+  </data>
 </root>

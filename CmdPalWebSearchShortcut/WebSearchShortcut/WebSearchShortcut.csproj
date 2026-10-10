@@ -57,10 +57,15 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.CommandPalette.Extensions" />
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" />
-    <PackageReference Include="Microsoft.Web.WebView2" />
     <PackageReference Include="Microsoft.Windows.CsWinRT" />
-    <PackageReference Include="Microsoft.WindowsAppSDK" />
     <PackageReference Include="Shmuelie.WinRTServer" />
+
+    <!-- Builds the MSIX for the packaged dev flow. The Windows App SDK isn't referenced: nothing uses it, and its
+         auto-initializer would make the unpackaged (winget) build fail outside a package. -->
+    <PackageReference Include="Microsoft.Windows.SDK.BuildTools.MSIX">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="System.Text.Json" />
   </ItemGroup>
 
@@ -73,6 +78,12 @@
     <Content Include="Assets\Square44x44Logo.targetsize-24_altform-unplated.png" />
     <Content Include="Assets\StoreLogo.png" />
     <Content Include="Assets\Wide310x150Logo.scale-200.png" />
+    <!-- Loaded at runtime by Properties/Icons.cs (extension logo and "Add" icon), so they must ship too. -->
+    <Content Include="Assets\Search.png" />
+    <Content Include="Assets\SearchAdd.png" />
+    <!-- Lets the loose-layout dev package (Add-AppxPackage -Register) find its assets. Only these are listed:
+         including every scale variant makes Release builds split them into separate resource packages. -->
+    <Content Update="Assets\*.png" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 
   <ItemGroup>

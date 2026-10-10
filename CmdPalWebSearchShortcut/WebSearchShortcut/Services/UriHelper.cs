@@ -29,8 +29,8 @@ public static class UriHelper
             return uri;
         }
 
-        // Try with https:// prefix
-        if (Uri.TryCreate("https://" + url, UriKind.Absolute, out uri))
+        // Try with https:// prefix, unless the URL already has a scheme (prefixing "https://[bad" would yield host "https")
+        if (!url.Contains("://", StringComparison.Ordinal) && Uri.TryCreate("https://" + url, UriKind.Absolute, out uri))
         {
             return uri;
         }

@@ -10,7 +10,7 @@ namespace WebSearchShortcut;
 internal interface ISuggestionsProvider
 {
     string Name { get; }
-    Task<IReadOnlyList<Suggestion>> GetSuggestionsAsync(string query, CancellationToken cancellationToken = default);
+    Task<IReadOnlyList<Suggestion>> GetSuggestionsAsync(string query, WebSearchShortcutDataEntry shortcut, CancellationToken cancellationToken = default);
 }
 
 internal sealed record Suggestion(string Title, string? Description = null, string[]? Tags = null, string? Image = null);

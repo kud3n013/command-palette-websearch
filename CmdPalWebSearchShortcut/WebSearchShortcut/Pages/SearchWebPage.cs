@@ -13,6 +13,8 @@ namespace WebSearchShortcut;
 
 internal sealed partial class SearchWebPage : DynamicListPage
 {
+    private static readonly TimeSpan SuggestionsDebounceDelay = TimeSpan.FromMilliseconds(150);
+
     private readonly WebSearchShortcutDataEntry _shortcut;
 
     private readonly IListItem _openHomepageListItem;
@@ -107,7 +109,10 @@ internal sealed partial class SearchWebPage : DynamicListPage
         IListItem[] suggestionItems;
         try
         {
-            suggestionItems = await FetchSuggestionItemsAsync(newSearch, currentCancellationSource!.Token).ConfigureAwait(false);
+            // Wait for typing to pause; a newer keystroke cancels this token before any request is sent.
+            await Task.Delay(SuggestionsDebounceDelay, currentCancellationSource!.Token).ConfigureAwait(false);
+
+            suggestionItems = await FetchSuggestionItemsAsync(newSearch, currentCancellationSource.Token).ConfigureAwait(false);
         }
         catch (OperationCanceledException)
         {
@@ -188,7 +193,7 @@ internal sealed partial class SearchWebPage : DynamicListPage
     {
         var suggestions = await SuggestionsRegistry
             .Get(_shortcut.SuggestionProvider!)
-            .GetSuggestionsAsync(searchText, cancellationToken)
+            .GetSuggestionsAsync(searchText, _shortcut, cancellationToken)
             .ConfigureAwait(false);
 
 #pragma warning disable CS8601 // Possible null reference assignment.

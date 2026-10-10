@@ -1,5 +1,7 @@
 using Microsoft.CommandPalette.Extensions.Toolkit;
 using WebSearchShortcut.Browser;
+using WebSearchShortcut.Helpers;
+using WebSearchShortcut.Properties;
 
 namespace WebSearchShortcut.Commands;
 
@@ -30,10 +32,11 @@ internal sealed partial class SearchWebCommand : InvokableCommand
 
     public override CommandResult Invoke()
     {
-        if (!ShellHelpers.OpenCommandInShell(_browserInfo.Path, _browserInfo.ArgumentsPattern, WebSearchShortcutDataEntry.GetSearchUrl(_shortcut, Query)))
+        var url = WebSearchShortcutDataEntry.GetSearchUrl(_shortcut, Query);
+
+        if (!ShellHelpers.OpenCommandInShell(_browserInfo.Path, _browserInfo.ArgumentsPattern, url))
         {
-            // TODO GH# 138 --> actually display feedback from the extension somewhere.
-            return CommandResult.KeepOpen();
+            return CommandResult.ShowToast(StringFormatter.Format(Resources.OpenUrlFailed_ToastTemplate, new() { ["url"] = url }));
         }
 
         // if (_settingsManager.ShowHistory != Resources.history_none)

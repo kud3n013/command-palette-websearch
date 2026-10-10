@@ -117,10 +117,13 @@ internal static class IconService
     {
         try
         {
-            using var client = new HttpClient();
-            client.DefaultRequestHeaders.UserAgent.ParseAdd(UserAgent);
+            using var request = new HttpRequestMessage(HttpMethod.Get, faviconUrl);
+            request.Headers.UserAgent.ParseAdd(UserAgent);
 
-            var response = await client.GetAsync(faviconUrl);
+            using var response = await SharedHttpClient.Instance
+                .SendAsync(request, HttpCompletionOption.ResponseHeadersRead)
+                .ConfigureAwait(false);
+
             return response.IsSuccessStatusCode
                 && response.Content.Headers.ContentType?.MediaType != "text/html";
         }
@@ -144,7 +147,7 @@ internal static class IconService
 
         try
         {
-            var uri = UriHelper.GetUri(shortcut.Domain ?? shortcut.Url);
+            var uri = UriHelper.GetUri(!string.IsNullOrEmpty(shortcut.Domain) ? shortcut.Domain : shortcut.Url);
             if (uri != null)
             {
                 var iconUrl = await GetValidFaviconUrlAsync(uri);

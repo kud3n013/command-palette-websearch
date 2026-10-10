@@ -1,15 +1,16 @@
 using Microsoft.CommandPalette.Extensions;
 using Microsoft.CommandPalette.Extensions.Toolkit;
-using Windows.Foundation;
 using WebSearchShortcut.Properties;
+using WebSearchShortcut.Services;
 
 namespace WebSearchShortcut;
 
 internal sealed partial class AddShortcutPage : ContentPage
 {
-    private readonly AddShortcutForm _addShortcutForm;
+    private readonly WebSearchShortcutDataEntry? _shortcut;
+    private readonly ShortcutService _service;
 
-    public AddShortcutPage(WebSearchShortcutDataEntry? shortcut)
+    public AddShortcutPage(WebSearchShortcutDataEntry? shortcut, ShortcutService service)
     {
         bool isAdd = shortcut is null;
 
@@ -18,14 +19,10 @@ internal sealed partial class AddShortcutPage : ContentPage
         Name = $"[UNBOUND] {nameof(AddShortcutPage)}.{nameof(Name)} required - shortcut={(shortcut is null ? "null" : $"'{shortcut.Name}'")}";
         Icon = isAdd ? Icons.AddShortcut : Icons.EditShortcut;
 
-        _addShortcutForm = new AddShortcutForm(shortcut);
+        _shortcut = shortcut;
+        _service = service;
     }
 
-    internal event TypedEventHandler<object, WebSearchShortcutDataEntry>? AddedCommand
-    {
-        add => _addShortcutForm.AddedCommand += value;
-        remove => _addShortcutForm.AddedCommand -= value;
-    }
-
-    public override IContent[] GetContent() => [_addShortcutForm];
+    // A fresh form each time the page opens, so a previous visit's half-filled values don't linger.
+    public override IContent[] GetContent() => [new AddShortcutForm(_shortcut, _service)];
 }

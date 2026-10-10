@@ -374,5 +374,518 @@ namespace WebSearchShortcut.Properties {
                 return ResourceManager.GetString("WebSearchShortcut_DisplayName", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Alias (Optional).
+        /// </summary>
+        internal static string AddShortcutForm_Keyword_Label {
+            get {
+                return ResourceManager.GetString("AddShortcutForm_Keyword_Label", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to e.g. g, then type "g cats" in Command Palette to search with it.
+        /// </summary>
+        internal static string AddShortcutForm_Keyword_Placeholder {
+            get {
+                return ResourceManager.GetString("AddShortcutForm_Keyword_Placeholder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The alias can't contain spaces.
+        /// </summary>
+        internal static string AddShortcutForm_Keyword_ErrorMessage {
+            get {
+                return ResourceManager.GetString("AddShortcutForm_Keyword_ErrorMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Delete {shortcut}?.
+        /// </summary>
+        internal static string DeleteShortcut_ConfirmTitleTemplate {
+            get {
+                return ResourceManager.GetString("DeleteShortcut_ConfirmTitleTemplate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to This search shortcut will be removed..
+        /// </summary>
+        internal static string DeleteShortcut_ConfirmDescription {
+            get {
+                return ResourceManager.GetString("DeleteShortcut_ConfirmDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Delete.
+        /// </summary>
+        internal static string DeleteShortcut_ConfirmButton {
+            get {
+                return ResourceManager.GetString("DeleteShortcut_ConfirmButton", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Couldn't open {url}.
+        /// </summary>
+        internal static string OpenUrlFailed_ToastTemplate {
+            get {
+                return ResourceManager.GetString("OpenUrlFailed_ToastTemplate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {shortcut} has no valid URL to open. Set a homepage or fix the URL..
+        /// </summary>
+        internal static string NoHomepage_ToastTemplate {
+            get {
+                return ResourceManager.GetString("NoHomepage_ToastTemplate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Couldn't load search shortcuts.
+        /// </summary>
+        internal static string StorageLoadError_Title {
+            get {
+                return ResourceManager.GetString("StorageLoadError_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Open shortcuts file.
+        /// </summary>
+        internal static string StorageLoadError_OpenFile {
+            get {
+                return ResourceManager.GetString("StorageLoadError_OpenFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Reload shortcuts.
+        /// </summary>
+        internal static string StorageLoadError_Reload {
+            get {
+                return ResourceManager.GetString("StorageLoadError_Reload", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Reset to default shortcuts.
+        /// </summary>
+        internal static string StorageLoadError_Reset {
+            get {
+                return ResourceManager.GetString("StorageLoadError_Reset", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Reset search shortcuts?.
+        /// </summary>
+        internal static string StorageLoadError_ResetConfirmTitle {
+            get {
+                return ResourceManager.GetString("StorageLoadError_ResetConfirmTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The current file will be copied to a .bak file next to it, then replaced with the default shortcuts..
+        /// </summary>
+        internal static string StorageLoadError_ResetConfirmDescription {
+            get {
+                return ResourceManager.GetString("StorageLoadError_ResetConfirmDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Search shortcuts couldn't be loaded. Fix or reset the shortcuts file first..
+        /// </summary>
+        internal static string StorageLoadError_AddBlocked {
+            get {
+                return ResourceManager.GetString("StorageLoadError_AddBlocked", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Shortcuts reset. Backup saved to {backup}.
+        /// </summary>
+        internal static string StorageReset_ToastTemplate {
+            get {
+                return ResourceManager.GetString("StorageReset_ToastTemplate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Search shortcuts.
+        /// </summary>
+        internal static string Settings_PageTitle {
+            get {
+                return ResourceManager.GetString("Settings_PageTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Add a website you can search from the Command Palette..
+        /// </summary>
+        internal static string Settings_AddDescription {
+            get {
+                return ResourceManager.GetString("Settings_AddDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Add.
+        /// </summary>
+        internal static string Settings_AddButton {
+            get {
+                return ResourceManager.GetString("Settings_AddButton", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Added {shortcut}..
+        /// </summary>
+        internal static string Settings_AddedTemplate {
+            get {
+                return ResourceManager.GetString("Settings_AddedTemplate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cancel.
+        /// </summary>
+        internal static string Settings_Cancel {
+            get {
+                return ResourceManager.GetString("Settings_Cancel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Saved {shortcut}..
+        /// </summary>
+        internal static string Settings_SavedTemplate {
+            get {
+                return ResourceManager.GetString("Settings_SavedTemplate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to This search shortcut no longer exists..
+        /// </summary>
+        internal static string Settings_ShortcutMissing {
+            get {
+                return ResourceManager.GetString("Settings_ShortcutMissing", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Your search shortcuts ({count}).
+        /// </summary>
+        internal static string Settings_ListHeaderTemplate {
+            get {
+                return ResourceManager.GetString("Settings_ListHeaderTemplate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No search shortcuts yet. Add one above or import a list below..
+        /// </summary>
+        internal static string Settings_ListEmpty {
+            get {
+                return ResourceManager.GetString("Settings_ListEmpty", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Alias: {keyword}.
+        /// </summary>
+        internal static string Settings_KeywordTemplate {
+            get {
+                return ResourceManager.GetString("Settings_KeywordTemplate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Suggestions: {provider}.
+        /// </summary>
+        internal static string Settings_SuggestionsTemplate {
+            get {
+                return ResourceManager.GetString("Settings_SuggestionsTemplate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Reset.
+        /// </summary>
+        internal static string Settings_ResetConfirmButton {
+            get {
+                return ResourceManager.GetString("Settings_ResetConfirmButton", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Import and export.
+        /// </summary>
+        internal static string Import_Header {
+            get {
+                return ResourceManager.GetString("Import_Header", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Paste JSON, or the full path to a .json file. Accepted: an export from this page, a WebSearchShortcut.json file, or a PowerToys Run WebSearchShortcut config..
+        /// </summary>
+        internal static string Import_Description {
+            get {
+                return ResourceManager.GetString("Import_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Paste JSON or a file path.
+        /// </summary>
+        internal static string Import_Placeholder {
+            get {
+                return ResourceManager.GetString("Import_Placeholder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Replace shortcuts that have the same name.
+        /// </summary>
+        internal static string Import_ReplaceToggle {
+            get {
+                return ResourceManager.GetString("Import_ReplaceToggle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Import.
+        /// </summary>
+        internal static string Import_Button {
+            get {
+                return ResourceManager.GetString("Import_Button", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Import finished: {added} added, {updated} replaced, {skipped} skipped (name already exists), {invalid} invalid..
+        /// </summary>
+        internal static string Import_ResultTemplate {
+            get {
+                return ResourceManager.GetString("Import_ResultTemplate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No search shortcuts found ({invalid} invalid). Each one needs a name and a URL, and an alias without spaces..
+        /// </summary>
+        internal static string Import_NothingFoundTemplate {
+            get {
+                return ResourceManager.GetString("Import_NothingFoundTemplate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to That isn't valid JSON: {error}.
+        /// </summary>
+        internal static string Import_InvalidJsonTemplate {
+            get {
+                return ResourceManager.GetString("Import_InvalidJsonTemplate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Couldn't read {path}: {error}.
+        /// </summary>
+        internal static string Import_FileErrorTemplate {
+            get {
+                return ResourceManager.GetString("Import_FileErrorTemplate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Paste JSON or a file path first..
+        /// </summary>
+        internal static string Import_EmptyInput {
+            get {
+                return ResourceManager.GetString("Import_EmptyInput", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Copy all as JSON.
+        /// </summary>
+        internal static string Export_Button {
+            get {
+                return ResourceManager.GetString("Export_Button", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Copied {count} search shortcuts to the clipboard as JSON..
+        /// </summary>
+        internal static string Export_ResultTemplate {
+            get {
+                return ResourceManager.GetString("Export_ResultTemplate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Include in global results.
+        /// </summary>
+        internal static string AddShortcutForm_UseAsFallback_Label {
+            get {
+                return ResourceManager.GetString("AddShortcutForm_UseAsFallback_Label", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Offer this search for anything typed in Command Palette, not only after its alias.
+        /// </summary>
+        internal static string AddShortcutForm_UseAsFallback_Title {
+            get {
+                return ResourceManager.GetString("AddShortcutForm_UseAsFallback_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Search by name, alias or URL.
+        /// </summary>
+        internal static string Settings_SearchPlaceholder {
+            get {
+                return ResourceManager.GetString("Settings_SearchPlaceholder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Search.
+        /// </summary>
+        internal static string Settings_SearchButton {
+            get {
+                return ResourceManager.GetString("Settings_SearchButton", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Show all.
+        /// </summary>
+        internal static string Settings_ClearSearch {
+            get {
+                return ResourceManager.GetString("Settings_ClearSearch", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {matches} of {count} match "{query}".
+        /// </summary>
+        internal static string Settings_MatchesTemplate {
+            get {
+                return ResourceManager.GetString("Settings_MatchesTemplate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Nothing matches "{query}"..
+        /// </summary>
+        internal static string Settings_NoMatchesTemplate {
+            get {
+                return ResourceManager.GetString("Settings_NoMatchesTemplate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Off: hidden from Command Palette.
+        /// </summary>
+        internal static string Settings_DisabledNote {
+            get {
+                return ResourceManager.GetString("Settings_DisabledNote", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {shortcut} is on. Select to turn it off..
+        /// </summary>
+        internal static string Settings_SwitchOnTemplate {
+            get {
+                return ResourceManager.GetString("Settings_SwitchOnTemplate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {shortcut} is off. Select to turn it on..
+        /// </summary>
+        internal static string Settings_SwitchOffTemplate {
+            get {
+                return ResourceManager.GetString("Settings_SwitchOffTemplate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Add many search shortcuts from JSON, or copy them all.
+        /// </summary>
+        internal static string Import_Summary {
+            get {
+                return ResourceManager.GetString("Import_Summary", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Shown in Command Palette and in this list.
+        /// </summary>
+        internal static string AddShortcutForm_Name_Description {
+            get {
+                return ResourceManager.GetString("AddShortcutForm_Name_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Enter alias.
+        /// </summary>
+        internal static string AddShortcutForm_Keyword_ShortPlaceholder {
+            get {
+                return ResourceManager.GetString("AddShortcutForm_Keyword_ShortPlaceholder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Where search suggestions come from while you type.
+        /// </summary>
+        internal static string AddShortcutForm_SuggestionProvider_Description {
+            get {
+                return ResourceManager.GetString("AddShortcutForm_SuggestionProvider_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Opened by "Open homepage" and when the search is empty. Uses the domain by default..
+        /// </summary>
+        internal static string AddShortcutForm_Homepage_Description {
+            get {
+                return ResourceManager.GetString("AddShortcutForm_Homepage_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Put between words instead of "+", e.g. %20.
+        /// </summary>
+        internal static string AddShortcutForm_ReplaceWhitespace_Description {
+            get {
+                return ResourceManager.GetString("AddShortcutForm_ReplaceWhitespace_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Browser that opens the results.
+        /// </summary>
+        internal static string AddShortcutForm_BrowserPath_Description {
+            get {
+                return ResourceManager.GetString("AddShortcutForm_BrowserPath_Description", resourceCulture);
+            }
+        }
     }
 }

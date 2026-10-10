@@ -223,4 +223,175 @@
   <data name="SettingsItem_Title" type="System.Resources.ResXNullRef, System.Windows.Forms">
     <value />
   </data>
+  <data name="AddShortcutForm_Keyword_Label" xml:space="preserve">
+    <value>别名（可选）</value>
+  </data>
+  <data name="AddShortcutForm_Keyword_Placeholder" xml:space="preserve">
+    <value>例如 g，然后在命令面板中输入“g cats”即可用它搜索</value>
+  </data>
+  <data name="AddShortcutForm_Keyword_ErrorMessage" xml:space="preserve">
+    <value>别名不能包含空格</value>
+  </data>
+  <data name="DeleteShortcut_ConfirmTitleTemplate" xml:space="preserve">
+    <value>删除 {shortcut}？</value>
+  </data>
+  <data name="DeleteShortcut_ConfirmDescription" xml:space="preserve">
+    <value>此搜索快捷方式将被移除。</value>
+  </data>
+  <data name="DeleteShortcut_ConfirmButton" xml:space="preserve">
+    <value>删除</value>
+  </data>
+  <data name="OpenUrlFailed_ToastTemplate" xml:space="preserve">
+    <value>无法打开 {url}</value>
+  </data>
+  <data name="NoHomepage_ToastTemplate" xml:space="preserve">
+    <value>{shortcut} 没有可打开的有效 URL。请设置主页或修正 URL。</value>
+  </data>
+  <data name="StorageLoadError_Title" xml:space="preserve">
+    <value>无法加载搜索快捷方式</value>
+  </data>
+  <data name="StorageLoadError_OpenFile" xml:space="preserve">
+    <value>打开快捷方式文件</value>
+  </data>
+  <data name="StorageLoadError_Reload" xml:space="preserve">
+    <value>重新加载快捷方式</value>
+  </data>
+  <data name="StorageLoadError_Reset" xml:space="preserve">
+    <value>重置为默认快捷方式</value>
+  </data>
+  <data name="StorageLoadError_ResetConfirmTitle" xml:space="preserve">
+    <value>重置搜索快捷方式？</value>
+  </data>
+  <data name="StorageLoadError_ResetConfirmDescription" xml:space="preserve">
+    <value>当前文件将被复制为同目录下的 .bak 文件，然后替换为默认快捷方式。</value>
+  </data>
+  <data name="StorageLoadError_AddBlocked" xml:space="preserve">
+    <value>无法加载搜索快捷方式。请先修复或重置快捷方式文件。</value>
+  </data>
+  <data name="StorageReset_ToastTemplate" xml:space="preserve">
+    <value>快捷方式已重置。备份已保存到 {backup}</value>
+  </data>
+  <data name="Settings_PageTitle" xml:space="preserve">
+    <value>搜索快捷方式</value>
+  </data>
+  <data name="Settings_AddDescription" xml:space="preserve">
+    <value>添加可以从命令面板中搜索的网站。</value>
+  </data>
+  <data name="Settings_AddButton" xml:space="preserve">
+    <value>添加</value>
+  </data>
+  <data name="Settings_AddedTemplate" xml:space="preserve">
+    <value>已添加 {shortcut}。</value>
+  </data>
+  <data name="Settings_Cancel" xml:space="preserve">
+    <value>取消</value>
+  </data>
+  <data name="Settings_SavedTemplate" xml:space="preserve">
+    <value>已保存 {shortcut}。</value>
+  </data>
+  <data name="Settings_ShortcutMissing" xml:space="preserve">
+    <value>此搜索快捷方式已不存在。</value>
+  </data>
+  <data name="Settings_ListHeaderTemplate" xml:space="preserve">
+    <value>你的搜索快捷方式（{count}）</value>
+  </data>
+  <data name="Settings_ListEmpty" xml:space="preserve">
+    <value>还没有搜索快捷方式。请在上方添加，或在下方导入列表。</value>
+  </data>
+  <data name="Settings_KeywordTemplate" xml:space="preserve">
+    <value>别名：{keyword}</value>
+  </data>
+  <data name="Settings_SuggestionsTemplate" xml:space="preserve">
+    <value>建议：{provider}</value>
+  </data>
+  <data name="Settings_ResetConfirmButton" xml:space="preserve">
+    <value>重置</value>
+  </data>
+  <data name="Import_Header" xml:space="preserve">
+    <value>导入和导出</value>
+  </data>
+  <data name="Import_Description" xml:space="preserve">
+    <value>粘贴 JSON，或 .json 文件的完整路径。支持：从此页面导出的内容、WebSearchShortcut.json 文件，或 PowerToys Run WebSearchShortcut 配置。</value>
+  </data>
+  <data name="Import_Placeholder" xml:space="preserve">
+    <value>粘贴 JSON 或文件路径</value>
+  </data>
+  <data name="Import_ReplaceToggle" xml:space="preserve">
+    <value>替换同名的快捷方式</value>
+  </data>
+  <data name="Import_Button" xml:space="preserve">
+    <value>导入</value>
+  </data>
+  <data name="Import_ResultTemplate" xml:space="preserve">
+    <value>导入完成：添加 {added} 个，替换 {updated} 个，跳过 {skipped} 个（名称已存在），无效 {invalid} 个。</value>
+  </data>
+  <data name="Import_NothingFoundTemplate" xml:space="preserve">
+    <value>未找到搜索快捷方式（{invalid} 个无效）。每个都需要名称和 URL，别名不能包含空格。</value>
+  </data>
+  <data name="Import_InvalidJsonTemplate" xml:space="preserve">
+    <value>这不是有效的 JSON：{error}</value>
+  </data>
+  <data name="Import_FileErrorTemplate" xml:space="preserve">
+    <value>无法读取 {path}：{error}</value>
+  </data>
+  <data name="Import_EmptyInput" xml:space="preserve">
+    <value>请先粘贴 JSON 或文件路径。</value>
+  </data>
+  <data name="Export_Button" xml:space="preserve">
+    <value>全部复制为 JSON</value>
+  </data>
+  <data name="Export_ResultTemplate" xml:space="preserve">
+    <value>已将 {count} 个搜索快捷方式以 JSON 格式复制到剪贴板。</value>
+  </data>
+  <data name="AddShortcutForm_UseAsFallback_Label" xml:space="preserve">
+    <value>包含在全局结果中</value>
+  </data>
+  <data name="AddShortcutForm_UseAsFallback_Title" xml:space="preserve">
+    <value>对在命令面板中输入的任何内容提供此搜索，而不仅是在别名之后</value>
+  </data>
+  <data name="Settings_SearchPlaceholder" xml:space="preserve">
+    <value>按名称、别名或 URL 搜索</value>
+  </data>
+  <data name="Settings_SearchButton" xml:space="preserve">
+    <value>搜索</value>
+  </data>
+  <data name="Settings_ClearSearch" xml:space="preserve">
+    <value>显示全部</value>
+  </data>
+  <data name="Settings_MatchesTemplate" xml:space="preserve">
+    <value>{count} 个中有 {matches} 个匹配“{query}”</value>
+  </data>
+  <data name="Settings_NoMatchesTemplate" xml:space="preserve">
+    <value>没有与“{query}”匹配的项。</value>
+  </data>
+  <data name="Settings_DisabledNote" xml:space="preserve">
+    <value>已关闭：不在命令面板中显示</value>
+  </data>
+  <data name="Settings_SwitchOnTemplate" xml:space="preserve">
+    <value>{shortcut} 已开启。选择以关闭。</value>
+  </data>
+  <data name="Settings_SwitchOffTemplate" xml:space="preserve">
+    <value>{shortcut} 已关闭。选择以开启。</value>
+  </data>
+  <data name="Import_Summary" xml:space="preserve">
+    <value>从 JSON 批量添加搜索快捷方式，或全部复制</value>
+  </data>
+  <data name="AddShortcutForm_Name_Description" xml:space="preserve">
+    <value>显示在命令面板和此列表中</value>
+  </data>
+  <data name="AddShortcutForm_Keyword_ShortPlaceholder" xml:space="preserve">
+    <value>输入别名</value>
+  </data>
+  <data name="AddShortcutForm_SuggestionProvider_Description" xml:space="preserve">
+    <value>输入时搜索建议的来源</value>
+  </data>
+  <data name="AddShortcutForm_Homepage_Description" xml:space="preserve">
+    <value>由“打开主页”以及搜索为空时打开。默认使用域名。</value>
+  </data>
+  <data name="AddShortcutForm_ReplaceWhitespace_Description" xml:space="preserve">
+    <value>用于替代单词之间的“+”，例如 %20</value>
+  </data>
+  <data name="AddShortcutForm_BrowserPath_Description" xml:space="preserve">
+    <value>用于打开结果的浏览器</value>
+  </data>
 </root>

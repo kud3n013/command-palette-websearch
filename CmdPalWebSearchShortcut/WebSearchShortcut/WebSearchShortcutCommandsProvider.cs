@@ -4,7 +4,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using Microsoft.CommandPalette.Extensions;
@@ -20,16 +19,16 @@ namespace WebSearchShortcut;
 
 public partial class WebSearchShortcutCommandsProvider : CommandProvider
 {
+    private readonly ShortcutService _service;
+    private readonly ShortcutsSettingsPage _settingsPage;
     private readonly ICommandItem _addShortcutItem;
     private ICommandItem[] _topLevelCommands = [];
     private IFallbackCommandItem[] _fallbackCommands = [];
-    private Storage? _storage;
 
     public WebSearchShortcutCommandsProvider()
     {
         DisplayName = Resources.WebSearchShortcut_DisplayName;
         Icon = Icons.Logo;
-        Settings = SettingsManager.Instance.Settings;
 
         var logger = new CmdPalLogger("WebSearchShortcut")
         {
@@ -44,16 +43,26 @@ public partial class WebSearchShortcutCommandsProvider : CommandProvider
             logger.LogLevel_ = SettingsManager.Instance.LogLevel_;
         };
 
-        var addShortcutPage = new AddShortcutPage(null)
+        _service = new ShortcutService(GetShortcutsJsonPath());
+        _service.Changed += (_, _) =>
+        {
+            ReloadCommands();
+            RaiseItemsChanged(0);
+        };
+
+        // Shortcut management lives in the settings page, shown both in Command Palette Settings and from the palette.
+        _settingsPage = new ShortcutsSettingsPage(_service);
+        Settings = new ShortcutsSettings(_settingsPage);
+
+        var addShortcutPage = new AddShortcutPage(null, _service)
         {
             Name = Resources.AddShortcutItem_Name
         };
-        addShortcutPage.AddedCommand += AddNewCommand_AddedCommand;
         _addShortcutItem = new CommandItem(addShortcutPage)
         {
             Title = Resources.AddShortcutItem_Title,
             Icon = Icons.AddShortcut,
-            MoreCommands = [new CommandContextItem(SettingsManager.Instance.Settings.SettingsPage) { Title = Resources.SettingsItem_Title }]
+            MoreCommands = [new CommandContextItem(_settingsPage) { Title = Resources.SettingsItem_Title }]
         };
     }
 
@@ -77,80 +86,88 @@ public partial class WebSearchShortcutCommandsProvider : CommandProvider
         return Path.Combine(directory, "WebSearchShortcut.json");
     }
 
-    private void AddNewCommand_AddedCommand(object sender, WebSearchShortcutDataEntry shortcut)
-    {
-        ExtensionHost.LogMessage($"Adding bookmark ({shortcut.Name},{shortcut.Url})");
-        if (_storage != null)
-        {
-            _storage.Data.Add(shortcut);
-            UpdateIconUrlAsync(shortcut);
-        }
-
-        SaveAndRefresh();
-    }
-
-    private void Edit_AddedCommand(object sender, WebSearchShortcutDataEntry shortcut)
-    {
-        ExtensionHost.LogMessage($"Edited bookmark ({shortcut.Name},{shortcut.Url})");
-        UpdateIconUrlAsync(shortcut);
-
-        SaveAndRefresh();
-    }
-
-    private async void UpdateIconUrlAsync(WebSearchShortcutDataEntry shortcut)
-    {
-        if (_storage is null) return;
-        if (!string.IsNullOrWhiteSpace(shortcut.IconUrl)) return;
-
-        var url = await IconService.UpdateIconUrlAsync(shortcut);
-        SaveAndRefresh();
-        ExtensionHost.LogMessage($"Updating icon URL for bookmark ({shortcut.Name},{shortcut.Url}) to {url}");
-    }
-
-    private void SaveAndRefresh()
-    {
-        if (_storage is not null)
-        {
-            var jsonPath = GetShortcutsJsonPath();
-            Storage.WriteToFile(jsonPath, _storage);
-        }
-
-        ReloadCommands();
-        RaiseItemsChanged(0);
-    }
-
     private void ReloadCommands()
     {
+        var shortcuts = _service.GetShortcuts();
+
         List<ICommandItem> items = [_addShortcutItem];
         List<IFallbackCommandItem> fallbackItem = [];
 
-        if (_storage is null)
+        if (_service.LoadError is { } loadError)
         {
-            LoadShortcutFromFile();
+            items.Insert(0, CreateLoadErrorItem(loadError));
         }
-
-        if (_storage is not null)
+        else
         {
-            items.AddRange(_storage.Data.Select(CreateCommandItem));
-            fallbackItem.AddRange(_storage.Data.Select(shortcut => new FallbackSearchWebItem(shortcut)));
+            // Disabled shortcuts stay in the file (and the settings page) but not in the palette.
+            var enabled = shortcuts.Where(shortcut => shortcut.Enabled).ToArray();
+            items.AddRange(enabled.Select(CreateCommandItem));
+            // Without "global fallback" a shortcut still answers to its keyword, which is also handled by its fallback item.
+            fallbackItem.AddRange(enabled
+                .Where(shortcut => shortcut.UseAsFallback || !string.IsNullOrWhiteSpace(shortcut.Keyword))
+                .Select(shortcut => new FallbackSearchWebItem(shortcut)));
         }
 
         _topLevelCommands = [.. items];
         _fallbackCommands = [.. fallbackItem];
     }
 
-    private void LoadShortcutFromFile()
+    private CommandItem CreateLoadErrorItem(Exception error)
     {
-        try
+        var reloadCommand = new CommandContextItem(
+            title: Resources.StorageLoadError_Reload,
+            name: Resources.StorageLoadError_Reload,
+            action: _service.Reload,
+            result: CommandResult.KeepOpen()
+        )
         {
-            var jsonFile = GetShortcutsJsonPath();
-            _storage = Storage.ReadFromFile(jsonFile);
-        }
-        catch (Exception ex)
+            Icon = new IconInfo("")
+        };
+
+        var confirmResetCommand = new AnonymousCommand(() =>
         {
-            // debug log error
-            Debug.WriteLine($"Error loading commands: {ex.Message}");
-        }
+            var backupPath = _service.ResetToDefaults();
+
+            if (backupPath is not null)
+            {
+                new ToastStatusMessage(StringFormatter.Format(Resources.StorageReset_ToastTemplate, new() { ["backup"] = backupPath })).Show();
+            }
+        })
+        {
+            Name = Resources.StorageLoadError_Reset,
+            Result = CommandResult.KeepOpen()
+        };
+
+        var resetCommand = new CommandContextItem(
+            title: Resources.StorageLoadError_Reset,
+            name: Resources.StorageLoadError_Reset,
+            action: () => { },
+            result: CommandResult.Confirm(new ConfirmationArgs
+            {
+                Title = Resources.StorageLoadError_ResetConfirmTitle,
+                Description = Resources.StorageLoadError_ResetConfirmDescription,
+                PrimaryCommand = confirmResetCommand,
+                IsPrimaryCommandCritical = true
+            })
+        )
+        {
+            Icon = Icons.Delete,
+            IsCritical = true
+        };
+
+        var openFileCommand = new AnonymousCommand(() => ShellHelpers.OpenInShell(_service.FilePath))
+        {
+            Name = Resources.StorageLoadError_OpenFile,
+            Result = CommandResult.Dismiss()
+        };
+
+        return new CommandItem(openFileCommand)
+        {
+            Title = Resources.StorageLoadError_Title,
+            Subtitle = error is StorageLoadException ? error.Message : $"{_service.FilePath}: {error.Message}",
+            Icon = new IconInfo(""),
+            MoreCommands = [reloadCommand, resetCommand]
+        };
     }
 
     private CommandItem CreateCommandItem(WebSearchShortcutDataEntry shortcut)
@@ -166,36 +183,42 @@ public partial class WebSearchShortcutCommandsProvider : CommandProvider
             Icon = Icons.Home
         };
 
-        var editShortcutPage = new AddShortcutPage(shortcut)
+        var editShortcutPage = new AddShortcutPage(shortcut, _service)
         {
             Name = StringFormatter.Format(Resources.EditShortcutItem_NameTemplate, new() { ["shortcut"] = shortcut.Name }),
         };
-        editShortcutPage.AddedCommand += Edit_AddedCommand;
         var editCommand = new CommandContextItem(editShortcutPage)
         {
             Title = StringFormatter.Format(Resources.EditShortcutItem_TitleTemplate, new() { ["shortcut"] = shortcut.Name }),
             Icon = Icons.Edit
         };
 
+        var confirmDeleteCommand = new AnonymousCommand(() => _service.Delete(shortcut.Id))
+        {
+            Name = Resources.DeleteShortcut_ConfirmButton,
+            Result = CommandResult.KeepOpen()
+        };
+
         var deleteCommand = new CommandContextItem(
             title: StringFormatter.Format(Resources.DeleteShortcutItem_TitleTemplate, new() { ["shortcut"] = shortcut.Name }),
             name: $"[UNREACHABLE] DeleteCommand.Name - shortcut='{shortcut.Name}'",
-            action: () =>
+            action: () => { },
+            result: CommandResult.Confirm(new ConfirmationArgs
             {
-                if (_storage != null)
-                {
-                    ExtensionHost.LogMessage($"Deleting bookmark ({shortcut.Name},{shortcut.Url})");
-
-                    _storage.Data.Remove(shortcut);
-
-                    SaveAndRefresh();
-                }
-            },
-            result: CommandResult.KeepOpen()
+                Title = StringFormatter.Format(Resources.DeleteShortcut_ConfirmTitleTemplate, new() { ["shortcut"] = shortcut.Name }),
+                Description = Resources.DeleteShortcut_ConfirmDescription,
+                PrimaryCommand = confirmDeleteCommand,
+                IsPrimaryCommandCritical = true
+            })
         )
         {
             Icon = Icons.Delete,
             IsCritical = true
+        };
+
+        var manageCommand = new CommandContextItem(_settingsPage)
+        {
+            Title = Resources.SettingsItem_Title
         };
 
         var commandItem = new CommandItem(
@@ -206,9 +229,11 @@ public partial class WebSearchShortcutCommandsProvider : CommandProvider
         )
         {
             Title = StringFormatter.Format(Resources.ShortcutItem_TitleTemplate, new() { ["shortcut"] = shortcut.Name }),
-            Subtitle = StringFormatter.Format(Resources.ShortcutItem_SubtitleTemplate, new() { ["shortcut"] = shortcut.Name }),
+            // Top-level items have no tags, so surface the keyword as a usage hint: "Search Google (g …)".
+            Subtitle = StringFormatter.Format(Resources.ShortcutItem_SubtitleTemplate, new() { ["shortcut"] = shortcut.Name })
+                + (string.IsNullOrWhiteSpace(shortcut.Keyword) ? string.Empty : $" ({shortcut.Keyword.Trim()} …)"),
             Icon = IconService.GetIconInfo(shortcut),
-            MoreCommands = [openHomepageCommand, editCommand, deleteCommand]
+            MoreCommands = [openHomepageCommand, editCommand, deleteCommand, manageCommand]
         };
 
         return commandItem;

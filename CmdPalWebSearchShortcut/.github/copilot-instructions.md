@@ -1,44 +1,77 @@
-# Copilot Instructions for PowerToys-Run-WebSearchShortcut
+# Copilot Instructions for WebSearchShortcut (Command Palette extension)
 
-This repository contains a **Windows App SDK** project that implements a **Command Palette Extension** (likely for PowerToys Run or similar hosts). It runs as a **COM Server**.
+This repository contains a **PowerToys Command Palette extension** that lets users search websites from the palette.
+It runs as an out-of-process **COM server** and ships as an **MSIX** package.
 
 ## Project Architecture
 
-- **Core Framework**: .NET 9.0, Windows App SDK, `Microsoft.CommandPalette.Extensions`.
-- **Entry Point**: `WebSearchShortcut/Program.cs` initializes the COM server (`Shmuelie.WinRTServer`) and registers the `WebSearchShortcut` extension.
-- **Extension Logic**:
-  - `WebSearchShortcut.cs`: Implements `IExtension`. Serves as the main bridge between the host and the plugin.
-  - `WebSearchShortcutCommandsProvider.cs`: Implements `CommandProvider`. Manages the list of available commands (shortcuts) displayed in the palette.
+- **Core Framework**: .NET 9, `Microsoft.CommandPalette.Extensions` (toolkit + WinRT projection), CsWinRT, AOT-compatible.
+  The Windows App SDK is intentionally **not** referenced: nothing uses it, and its auto-initializer breaks
+  unpackaged runs and tests.
+- **Entry Point**: `WebSearchShortcut/Program.cs` starts the COM server (`Shmuelie.WinRTServer`) when launched with
+  `-RegisterProcessAsComServer`; `WebSearchShortcut.cs` implements `IExtension` (its `[Guid]` is the COM CLSID and must
+  match `Package.appxmanifest`; `scripts/check-version.ps1` checks this).
+- **Commands**: `WebSearchShortcutCommandsProvider.cs` builds the top-level commands (one per shortcut, plus "Add"),
+  the fallback items (`Pages/FallbackSearchWebItem.cs`, which also handle `<keyword> <query>`), and sets `Settings` to
+  the custom settings page.
 - **Data & Persistence**:
-  - `Storage.cs`: Handles loading/saving shortcut configurations (JSON). Contains default providers (Google, Bing, etc.).
-  - `WebSearchShortcutDataEntry.cs`: Model for a single shortcut entry.
-- **Search Suggestions**:
-  - `SuggestionsProviders/`: Contains implementations of `ISuggestionsProvider` for different services (Google, Bing, YouTube, etc.).
-  - **Pattern**: Each provider implements `GetSuggestionsAsync` to fetch autocomplete results via HTTP.
-- **Browser Integration**: `Browser/` folder handles detecting and launching the default browser.
+  - `Services/ShortcutService.cs` is the single owner of the shortcuts list. All add/edit/delete/import/reset goes
+    through it (under a lock); it raises `Changed`, which both the provider and the settings page listen to.
+  - `Storage.cs` reads/writes `WebSearchShortcut.json`. A corrupt file throws `StorageLoadException` and is never
+    overwritten; `ResetToDefaults` backs it up first.
+  - `WebSearchShortcutDataEntry.cs` is one shortcut. Its `Id` must be preserved on edits/replacements because Command
+    Palette keys aliases, hotkeys and fallback settings on it (use `CopyValuesFrom`).
+  - `Services/ShortcutImporter.cs` parses import JSON (own format, arrays, single entries, PowerToys Run configs) and
+    merges it. Pure logic, unit-tested.
+- **UI**:
+  - `Pages/SearchWebPage.cs`: dynamic list page with debounced suggestions.
+  - `Pages/ShortcutsSettingsPage.cs`: the settings page (Command Palette Settings → Extensions): Add card, search
+    card, one expandable card per shortcut (`Forms/Settings/ShortcutCardForm.cs`, with an on/off switch), import/export.
+    It keeps its card objects between rebuilds and only raises `ItemsChanged` when the visible set of cards changes
+    (`ShortcutsChangedEventArgs.ListChanged`, or a new search); edits and switches re-render that card alone, since a
+    rebuild collapses every card and loses typed input.
+  - Expanding a card is `Action.ToggleVisibility` (`CardTemplates.ExpanderHeader`/`Details`), handled by the renderer:
+    the extension isn't told, so a re-rendered card starts collapsed unless rendered open on purpose (validation
+    error, delete confirmation). The switch is a PNG (`Helpers/SwitchImages.cs`) with a submit `selectAction`, because
+    `Input.Toggle` only reports its value on submit.
+  - `Forms/`: Adaptive Card JSON is built with `CardTemplates` / `ShortcutFormTemplate`; every value goes through
+    `AdaptiveCardHelpers.Str` (JSON-escaped). Submit buttons carry `{"action": "..."}` in `data`; read it with
+    `AdaptiveCardHelpers.GetSubmitAction`. Override `SubmitForm(string inputs, string data)` (returns `CommandResult`).
+- **Search Suggestions**: `SuggestionsProviders/` classes derive from `HttpSuggestionsProvider` (shared `HttpClient`
+  with a 5 s timeout) and expose a static `Parse(...)` that is unit-tested with canned responses.
+- **Browser Integration**: `Browser/` detects the default and installed browsers from the registry.
+- **Localization**: strings live in `Properties/Resources*.resx` (en, fr, zh-CN, zh-TW). `Resources.Designer.cs` is
+  **not** regenerated by `dotnet build`: add a property there by hand for every new key.
 
 ## Key Patterns & Conventions
 
-- **COM Server Lifetime**: The application runs as a local COM server. `Program.cs` manages the lifetime using `ManualResetEvent`.
-- **Toolkit Usage**: Heavily relies on `Microsoft.CommandPalette.Extensions.Toolkit` for implementing interfaces like `ICommandItem` and `CommandProvider`.
-- **Async/Await**: All I/O (network requests, file access) must be asynchronous.
-- **JSON Handling**: Use `System.Text.Json` for parsing API responses and storage files.
-- **Error Handling**: Suggestion providers should catch exceptions and log them via `ExtensionHost.LogMessage` (or return empty results) to avoid crashing the host.
+- **Never crash the host**: catch and log (`ExtensionHost.LogMessage`) in providers and background work; `async void`
+  must wrap its body in try/catch.
+- **AOT**: use `System.Text.Json` source generation (`JSONContext.cs`) or `JsonNode`/`JsonDocument`, never reflection
+  serialization.
+- **Command results**: forms on the settings page return `CommandResult.KeepOpen()` and show messages inline in the
+  card; palette commands use toasts (`CommandResult.ShowToast`) and `CommandResult.Confirm` for destructive actions.
 
 ## Development Workflows
 
-- **Build**: Standard `dotnet build`.
-- **Debugging**:
-  - The app expects to be launched with `-RegisterProcessAsComServer` by the host.
-  - To debug, you may need to attach to the process or configure the host to launch your debug build.
+- **Build**: `dotnet build WebSearchShortcut.sln -p:Platform=x64`.
+- **Test**: `dotnet test WebSearchShortcut.Tests/WebSearchShortcut.Tests.csproj -p:Platform=x64`. The test project
+  compiles the logic files directly (see its `.csproj`) instead of referencing the app; link new pure-logic files
+  there, and keep `Properties/Resources` and toolkit-UI types out of linked files.
+- **Run in Command Palette**: extensions are only discovered with package identity. Register the build output with
+  `Add-AppxPackage -Register WebSearchShortcut\bin\x64\Debug\AppxManifest.xml` (Developer Mode), then run **Reload**
+  in Command Palette. An exe registered only by CLSID is never loaded.
+- **Packaging/release**: `scripts/build-msix.ps1`, `scripts/new-winget-manifest.ps1`; see `RELEASING.md` at the repo root.
 - **Adding a New Search Provider**:
-  1. Create a new class in `SuggestionsProviders/` implementing `ISuggestionsProvider`.
-  2. Implement `GetSuggestionsAsync` to parse the specific API response.
-  3. (Optional) Add a default entry in `Storage.cs`.
+  1. Add a class in `SuggestionsProviders/` deriving from `HttpSuggestionsProvider` with `GetRequestUrl` and a static `Parse`.
+  2. Register it in `SuggestionsRegistry` (`Suggestion.cs`).
+  3. Add a parsing test in `WebSearchShortcut.Tests/SuggestionParsingTests.cs`.
+  4. (Optional) Add a default entry in `Storage.cs`.
 
 ## File Structure Highlights
 
-- `WebSearchShortcut/`: Main application project.
-- `WebSearchShortcut.Tests/`: Unit tests (MSTest).
-- `WebSearchShortcut/SuggestionsProviders/`: Search engine implementations.
-- `WebSearchShortcut/Commands/`: Command implementations (e.g., `SearchWebCommand`).
+- `WebSearchShortcut/`: the extension project.
+- `WebSearchShortcut.Tests/`: MSTest unit tests.
+- `WebSearchShortcut/Forms/Settings/`: settings page cards (add, per-shortcut, import/export, load error).
+- `WebSearchShortcut/SuggestionsProviders/`: suggestion sources.
+- `WebSearchShortcut/Commands/`: `SearchWebCommand`, `OpenHomePageCommand`.

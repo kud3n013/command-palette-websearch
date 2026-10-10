@@ -9,7 +9,7 @@ using Microsoft.CommandPalette.Extensions;
 
 namespace WebSearchShortcut;
 
-[Guid("b5d06b48-b861-4df6-bfda-403ef26f224a")]
+[Guid("4507dbd1-cc9b-414b-a879-5a2dd4266881")]
 public sealed partial class WebSearchShortcut : IExtension, IDisposable
 {
     private readonly ManualResetEvent _extensionDisposedEvent;

@@ -20,36 +20,97 @@ internal sealed class Storage
     //     return Data.FindAll(x => x.HideWhenEmptyQuery);
     // }
 
+    /// <summary>
+    /// Loads shortcuts from <paramref name="path"/>, creating the file with default shortcuts if it doesn't exist.
+    /// </summary>
+    /// <exception cref="StorageLoadException">The file exists but isn't valid shortcut JSON. The file is left untouched.</exception>
     public static Storage ReadFromFile(string path)
     {
-        var data = new Storage();
-
         if (!File.Exists(path))
         {
-            var defaultStorage = new Storage();
-            defaultStorage.Data.AddRange(GetDefaultEntries());
+            var defaultStorage = CreateDefault();
             WriteToFile(path, defaultStorage);
+
+            return defaultStorage;
         }
 
-        // if the file exists, load the saved shortcuts
-        if (File.Exists(path))
+        var jsonStringReading = File.ReadAllText(path);
+
+        if (string.IsNullOrWhiteSpace(jsonStringReading))
         {
-            var jsonStringReading = File.ReadAllText(path);
+            return new Storage();
+        }
 
-            if (!string.IsNullOrEmpty(jsonStringReading))
-            {
-                data = JsonSerializer.Deserialize(jsonStringReading, AppJsonSerializerContext.Default.Storage) ?? new Storage();
+        Storage data;
+        try
+        {
+            data = JsonSerializer.Deserialize(jsonStringReading, AppJsonSerializerContext.Default.Storage) ?? new Storage();
+        }
+        catch (JsonException ex)
+        {
+            throw new StorageLoadException(path, ex);
+        }
 
-                bool modified = EnsureIds(data.Data);
+        bool modified = Sanitize(data);
+        modified |= EnsureIds(data.Data);
 
-                if (modified)
-                {
-                    WriteToFile(path, data);
-                }
-            }
+        if (modified)
+        {
+            WriteToFile(path, data);
         }
 
         return data;
+    }
+
+    /// <summary>
+    /// Replaces the file at <paramref name="path"/> with the default shortcuts, first copying any existing file to a timestamped .bak next to it.
+    /// </summary>
+    /// <returns>The backup path, or null if there was no file to back up.</returns>
+    public static string? ResetToDefaults(string path)
+    {
+        string? backupPath = null;
+
+        if (File.Exists(path))
+        {
+            backupPath = $"{path}.{DateTime.Now:yyyyMMdd-HHmmss}.bak";
+            File.Copy(path, backupPath, overwrite: true);
+        }
+
+        WriteToFile(path, CreateDefault());
+
+        return backupPath;
+    }
+
+    private static Storage CreateDefault()
+    {
+        var storage = new Storage();
+        storage.Data.AddRange(GetDefaultEntries());
+
+        return storage;
+    }
+
+    /// <summary>
+    /// Repairs values that are valid JSON but would break the extension later (null entries, null required fields).
+    /// </summary>
+    private static bool Sanitize(Storage data)
+    {
+        bool modified = false;
+
+        if (data.Data is null)
+        {
+            data.Data = [];
+            return true;
+        }
+
+        modified |= data.Data.RemoveAll(entry => entry is null) > 0;
+
+        foreach (var entry in data.Data)
+        {
+            if (entry.Name is null) { entry.Name = string.Empty; modified = true; }
+            if (entry.Url is null) { entry.Url = string.Empty; modified = true; }
+        }
+
+        return modified;
     }
 
     private static List<WebSearchShortcutDataEntry> GetDefaultEntries()
@@ -100,11 +161,17 @@ internal sealed class Storage
 
     public static void WriteToFile(string path, Storage data)
     {
+        File.WriteAllText(path, ToJson(data));
+    }
+
+    /// <summary>
+    /// Serializes to the same format as the shortcuts file, which is also the export/import format.
+    /// </summary>
+    public static string ToJson(Storage data)
+    {
         EnsureIds(data.Data);
 
-        var jsonString = JsonPrettyFormatter.ToPrettyJson(data, AppJsonSerializerContext.Default.Storage);
-
-        File.WriteAllText(path, jsonString);
+        return JsonPrettyFormatter.ToPrettyJson(data, AppJsonSerializerContext.Default.Storage);
     }
 
     private static bool EnsureIds(List<WebSearchShortcutDataEntry> shortcuts)
@@ -134,4 +201,13 @@ internal sealed class Storage
 
         return $"WebSearchShortcut{randomNumber}";
     }
+}
+
+/// <summary>
+/// Thrown when the shortcuts file exists but can't be parsed.
+/// </summary>
+internal sealed class StorageLoadException(string filePath, Exception innerException)
+    : Exception($"Invalid shortcuts file '{filePath}': {innerException.Message}", innerException)
+{
+    public string FilePath { get; } = filePath;
 }

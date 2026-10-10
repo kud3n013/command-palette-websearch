@@ -1,73 +1,60 @@
 ## Prerequisites
 
 ### System Requirements
-- Windows 11 or Windows 10 version 2004 (build 19041) or newer
+- Windows 11, or Windows 10 version 2004 (build 19041) or newer
 - x64 or ARM64 processor
 
 ### Required Software
-1. **PowerToys with Command Palette**
-   - Install from Microsoft Store: https://apps.microsoft.com/detail/xp89dcgq3k6vld
-   - Includes Microsoft Edge WebView2 Runtime
-   - Available for both Windows 11 and Windows 10
+- **PowerToys Command Palette**: install PowerToys from the Microsoft Store
+  (https://apps.microsoft.com/detail/xp89dcgq3k6vld) or with `winget install Microsoft.PowerToys`, then enable
+  Command Palette and set a hotkey.
 
-## Installation Steps
+## Installation
 
-### Step 1: Install PowerToys
-1. Open Microsoft Store
-2. Search for "PowerToys" or use the direct link above
-3. Click "Get" or "Install"
-4. Wait for installation to complete
-
-### Step 2: Install Extension
-1. Download the MSIX package `WebSearchShortcut_x.x.x.0_x64(arm64).msix`
-2. Right-click the MSIX file
-3. Select "Install" from the context menu
-4. Follow the installation prompts
-5. The extension will automatically register with Command Palette
-
-### Step 3: Activate Command Palette
-1. Open PowerToys
-2. Navigate to Command Palette tool
-3. Enable Command Palette if not already active
-4. Set your preferred hotkey
+Install the extension package for your architecture (`WebSearchShortcut-x.y.z-x64.msix` or `-arm64.msix`) by
+double-clicking it, or with `Add-AppxPackage <file>`. Then open Command Palette, type **Reload** and run
+"Reload Command Palette extensions".
 
 ## Testing the Extension
 
-### Basic Functionality Test
-1. Press your Command Palette hotkey
-2. In the search box, type "Reload"
-3. Select "Reload, Reload Command Palette extensions" and press Enter
-4. Type "google"(or bing, wiki, npm ...) in the search box
-5. Select the google item and press Enter
-6. Type anything what you want to search
-7. Press Enter to open browser and search your keyword
+### Searching
+1. Open Command Palette, type `google` (or `bing`, `youtube`, `wikipedia`, `npm`...) and press Enter.
+2. Type a query. Suggestions appear as you type.
+3. Press Enter on the query or a suggestion. The browser opens the search results.
+
+### Aliases
+1. In Command Palette Settings → Extensions → WebSearchShortcut, click the **Google** card to expand it, set its
+   alias to `g` and press **Save**.
+2. From the palette's home page type `g cats`. The Google entry offers to search for "cats".
+
+### Managing shortcuts (Command Palette Settings → Extensions → WebSearchShortcut)
+1. **Add**: click **Add Search Shortcut** at the top, enter Name `Test` and Url `https://example.com/?q=%s`, press
+   **Add**. It appears in the list and in the palette.
+2. **Search**: type `test` in the search box and press **Search**. Only the Test card is listed; **Show all** brings
+   the others back.
+3. **Switch**: turn Test off with the switch on its card. It disappears from the palette; turn it back on.
+4. **Edit**: click the Test card, change the Url and press **Save**. Uncheck **Include in global results** and save: typing
+   any text in the palette no longer offers Test, but its alias still does.
+5. **Delete**: in the expanded card press **Delete**, then confirm.
+6. **Import**: click **Import and export**, paste
+   `[{"Name":"StackOverflow","Url":"https://stackoverflow.com/search?q=%s","Keyword":"so"}]` and press Import.
+   A result message reports 1 added.
+7. **Export**: press "Copy all as JSON" and paste the clipboard somewhere to check it.
 
 ### Expected Behavior
-- Extension should fetch a random riddle from the internet
-- Default shortcuts(Google, bing, npm, YouTube...) should display clearly in the Command Palette
-- Pressing Enter should show the answer in a popup dialog
-- Each new activation should fetch a different riddle
+- The default shortcuts (Google, Bing, YouTube, DuckDuckGo, Wikipedia, npm) appear in Command Palette.
+- Pressing Enter on a query opens the default browser (or the browser chosen for that shortcut) with the search.
+- Changes made in the settings page appear in the palette immediately, and vice versa.
 
 ## Troubleshooting
 
 ### Extension Not Appearing
-- Restart PowerToys
-- Reload Command Palette extensions (Step 3 in testing)
-- Verify the MSIX package installed successfully in Windows Settings > Apps
-
-### Installation Issues
-- Run as Administrator when installing MSIX
-- Ensure Windows is up to date
-- Check Windows Event Viewer for detailed error messages
-
-## What to Test
-
-1. **Installation Process**: Smooth MSIX installation
-2. **Extension Discovery**: Appears in Command Palette after reload
+- Run "Reload Command Palette extensions", or restart PowerToys.
+- Check the package is installed: Settings > Apps > Installed apps, or `Get-AppxPackage *WebSearchShortcut*`.
 
 ## Reporting Issues
 
-If you encounter problems, please report:
+Please report problems at https://github.com/kud3n013/command-palette-websearch/issues with:
 - Windows version and build number
 - PowerToys version
 - Exact error messages

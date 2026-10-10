@@ -46,6 +46,17 @@ internal sealed partial class FallbackSearchWebItem : FallbackCommandItem
 
     public override void UpdateQuery(string query)
     {
+        // "<keyword> <terms>" searches this shortcut for <terms> only; other queries are searched as typed, unless the
+        // shortcut isn't a global fallback, in which case it only answers to its keyword.
+        if (WebSearchShortcutDataEntry.TryStripKeyword(_shortcut, query, out var remainder))
+        {
+            query = remainder;
+        }
+        else if (!_shortcut.UseAsFallback)
+        {
+            query = string.Empty;
+        }
+
         bool isEmpty = string.IsNullOrWhiteSpace(query);
 
         // Order matters: update command state before Title. (Verified 2025-08-21)

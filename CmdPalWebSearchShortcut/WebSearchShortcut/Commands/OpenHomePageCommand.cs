@@ -1,5 +1,7 @@
 using Microsoft.CommandPalette.Extensions.Toolkit;
 using WebSearchShortcut.Browser;
+using WebSearchShortcut.Helpers;
+using WebSearchShortcut.Properties;
 
 namespace WebSearchShortcut.Commands;
 
@@ -18,10 +20,16 @@ internal sealed partial class OpenHomePageCommand : InvokableCommand
 
     public override CommandResult Invoke()
     {
-        if (!ShellHelpers.OpenCommandInShell(_browserInfo.Path, _browserInfo.ArgumentsPattern, WebSearchShortcutDataEntry.GetHomePageUrl(_shortcut)))
+        var url = WebSearchShortcutDataEntry.GetHomePageUrl(_shortcut);
+
+        if (string.IsNullOrEmpty(url))
         {
-            // TODO GH# 138 --> actually display feedback from the extension somewhere.
-            return CommandResult.KeepOpen();
+            return CommandResult.ShowToast(StringFormatter.Format(Resources.NoHomepage_ToastTemplate, new() { ["shortcut"] = _shortcut.Name }));
+        }
+
+        if (!ShellHelpers.OpenCommandInShell(_browserInfo.Path, _browserInfo.ArgumentsPattern, url))
+        {
+            return CommandResult.ShowToast(StringFormatter.Format(Resources.OpenUrlFailed_ToastTemplate, new() { ["url"] = url }));
         }
 
         return CommandResult.Dismiss();
