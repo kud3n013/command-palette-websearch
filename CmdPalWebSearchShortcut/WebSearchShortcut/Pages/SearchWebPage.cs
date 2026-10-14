@@ -43,7 +43,15 @@ internal sealed partial class SearchWebPage : DynamicListPage
             Name = StringFormatter.Format(Resources.OpenHomepageItem_NameTemplate, new() { ["shortcut"] = shortcut.Name }),
             Icon = Icons.Home
         };
-        _openHomepageListItem = new ListItem(openHomepagecommand)
+        // Pressing Enter right after typing can invoke this item before the host renders the search results, so it
+        // searches the current text when there is any.
+        _openHomepageListItem = new ListItem(
+            new SearchCurrentTextCommand(shortcut, () => SearchText)
+            {
+                Name = openHomepagecommand.Name,
+                Icon = Icons.Home
+            }
+        )
         {
             Title = StringFormatter.Format(Resources.OpenHomepageItem_TitleTemplate, new() { ["shortcut"] = shortcut.Name }),
             Icon = Icons.Home
@@ -174,7 +182,8 @@ internal sealed partial class SearchWebPage : DynamicListPage
         return
         [
             new ListItem(
-                new SearchWebCommand(_shortcut, searchText)
+                // Searches the text in the box when invoked, which may be newer than searchText if the list is stale.
+                new SearchCurrentTextCommand(_shortcut, () => SearchText)
                 {
                     Name = StringFormatter.Format(Resources.SearchQueryItem_NameTemplate, new() { ["shortcut"] = _shortcut.Name, ["query"] = searchText }),
                     Icon = Icons.Search
